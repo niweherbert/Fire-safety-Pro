@@ -23,10 +23,7 @@ export const Contact = () => {
     submissions.push({ ...formData, timestamp: new Date().toISOString() });
     localStorage.setItem('contactSubmissions', JSON.stringify(submissions));
     
-    toast({
-      title: "Message Sent!",
-      description: "We'll get back to you within 24 hours.",
-    });
+    toast.success("Message Sent! We'll get back to you within 24 hours.");
     
     setFormData({
       name: '',
