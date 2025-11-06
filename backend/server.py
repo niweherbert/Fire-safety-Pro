@@ -90,7 +90,7 @@ async def create_contact(contact_data: ContactCreate):
     """Submit a contact form inquiry"""
     try:
         contact_obj = Contact(**contact_data.dict())
-        result = await db.contacts.insert_one(contact_obj.dict())
+        await db.contacts.insert_one(contact_obj.dict())
         
         logger.info(f"New contact submission: {contact_obj.name} - {contact_obj.email}")
         
