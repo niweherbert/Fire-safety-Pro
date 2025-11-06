@@ -16,22 +16,37 @@ export const Contact = () => {
     message: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Mock submission - store in localStorage
-    const submissions = JSON.parse(localStorage.getItem('contactSubmissions') || '[]');
-    submissions.push({ ...formData, timestamp: new Date().toISOString() });
-    localStorage.setItem('contactSubmissions', JSON.stringify(submissions));
     
-    toast.success("Message Sent! We'll get back to you within 24 hours.");
-    
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      company: '',
-      message: ''
-    });
+    try {
+      const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+      const response = await fetch(`${BACKEND_URL}/api/contacts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        toast.success("Message Sent! We'll get back to you within 24 hours.");
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          company: '',
+          message: ''
+        });
+      } else {
+        toast.error("Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      toast.error("Failed to send message. Please try again.");
+    }
   };
 
   const handleChange = (e) => {
